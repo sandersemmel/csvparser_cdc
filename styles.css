@@ -1,0 +1,82 @@
+#selectfilediv{
+    display: flex;
+    min-height: 19%;
+    min-width: 98%;
+}
+.wrapper{
+    margin-top: 5%;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+.informatics{
+    display:flex;
+    min-height: 4%;
+    min-width: 100%;;
+}
+.box{
+    background-color: #1e2e61;
+    text-align: center;
+    max-height: 25%;
+    min-width: 20%;
+    word-wrap: break-word;
+
+
+}
+.box-info{
+    text-align: center;
+    color:white;
+    font-size: large;
+    vertical-align: middle;
+    line-height: 4%;
+    word-wrap: break-word;
+
+}
+.box-info-coming{
+    text-align: center;
+    color:gray;
+    font-size: large;
+    vertical-align: middle;
+    line-height: 4%;
+    word-wrap: break-word;
+
+}
+
+#noticetouser{
+    background-color: lawngreen;
+    width:80%;
+}
+
+#donatediv{
+    display:flex;
+}
+.donatebox{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    max-width: 20%;
+    word-wrap: break-word;
+}
+
+.carddiv{
+    color:white;
+    width: 12%;
+}
+#midnightbluediv{
+    background-color: #1587b7;
+}
+#rubydiv{
+    background-color: #c4314c;
+}
+#jaderoyaldiv{
+    background-color: #3c9e46;
+}
+#frostedicydiv{
+    background-color: #bba0a1;
+}
+#obsidiandiv{
+    background-color: #2b3135;
+}
+#cardselectiondiv{
+    display:flex;
+    height: 6%;
+}

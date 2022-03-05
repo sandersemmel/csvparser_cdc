@@ -1,0 +1,22 @@
+{
+  "name": "csvparser",
+  "version": "1.0.0",
+  "description": "a parser for total cro cashback",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cro",
+    "cashback",
+    "parse",
+    "csv"
+  ],
+  "author": "anon",
+  "license": "ISC",
+  "dependencies": {
+    "csv-string": "^4.1.0",
+    "fs": "0.0.1-security",
+    "jquery-csv": "^1.0.21"
+  }
+}
