@@ -1,8 +1,5 @@
-//const csv = require('csv-parse');
 const fs = require('fs');
-var jqcsv = require('jquery-csv');
 var CSV = require('csv-string');
-const { countReset } = require('console');
 const reader = new FileReader();
 const EUR_DEPOSIT = "EUR Deposit";
 
@@ -164,9 +161,12 @@ async function calculatePlaces(resu){
 
 }
 
+
 async function main(resu){
+    await showElement2("loader");
     await calculateCashback(resu);
     await calculatePlaces(resu);
+    await hideElement2("loader");
 }
 
 async function calculateCashback(resu){
@@ -271,3 +271,40 @@ window.onload = ()=>{
 
 //main();
 
+
+
+
+
+async function showElement2(elementID){
+    /*This function uses the visibility:hidden / visibility:visible because this way the element take space in DOM*/
+    /*This way we don't have items jumping up and down in DOM */ 
+    let element;
+    try {
+        element = document.getElementById(elementID);
+    } catch (error) {   
+        console.log("error happened, element was not found");
+        
+    }
+
+    if(!element){
+        // element does not exist
+        return false;
+    }
+
+    element.style.visibility = "visible"
+    return true;
+
+
+}
+
+
+async function hideElement2(elementID){
+    let element = document.getElementById(elementID);
+    if(!element){
+        return false;
+    }
+
+    element.style.visibility = "hidden";
+    return true;
+
+}
