@@ -45,7 +45,7 @@ async function calculateCashBackPercentage(fromNumber){
 
     let totalWithCashBack = (((100-selectedCard) /100) * fromNumber);
     let cashback = fromNumber - totalWithCashBack;
-    return cashback;
+    return cashback.toFixed(8);
 }
 async function parseMinusFromFront(values){
     let minusesRemoved = [];
