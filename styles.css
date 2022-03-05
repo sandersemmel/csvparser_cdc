@@ -1,3 +1,5 @@
+
+
 #selectfilediv{
     display: flex;
     min-height: 19%;
@@ -22,6 +24,8 @@
 
 
 }
+
+
 .box-info{
     text-align: center;
     color:white;
@@ -79,4 +83,28 @@
 #cardselectiondiv{
     display:flex;
     height: 6%;
+}
+
+@media all and (max-width: 970px) {
+    
+    .box-info{
+        font-size: 0.6em;
+
+    }
+    p {
+        font-size: 0.6em;
+    }
+    .cardlabel{
+        font-size: 0.5em;
+    }
+    .box-info-coming{
+        font-size: 0.6em;
+    }
+    h2{
+        font-size: 1em;
+    }
+    .cro_cashback_calculator_address{
+        font-size: 0.4em;
+    }
+  
 }
