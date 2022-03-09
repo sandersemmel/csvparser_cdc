@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "a parser for total cro cashback",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "sh devDependencies/copyfiles.sh",
+    "compile": "browserify index.js -o bundle.js && uglifyjs bundle.js > bruh2.js"
   },
   "keywords": [
     "cro",
@@ -18,5 +21,10 @@
     "csv-string": "^4.1.0",
     "fs": "0.0.1-security",
     "jquery-csv": "^1.0.21"
+  },
+  "devDependencies": {
+    "cli-color": "^2.0.1",
+    "path": "^0.12.7",
+    "replace-in-file": "^6.3.2"
   }
 }
