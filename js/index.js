@@ -1,7 +1,11 @@
 const fs = require('fs');
 var CSV = require('csv-string');
+//var libdom = require('lib-dom.d.ts');
 const reader = new FileReader();
 const EUR_DEPOSIT = "EUR Deposit";
+const SPOTIFY = "Spotify";
+const NETFLIX = "Netflix"
+const TRANSACTION_DESCRIPTION = "Transaction Description";
 
 //let arr = [];
 let cashbackPercentage = 3;
@@ -149,61 +153,150 @@ async function addToDom(element,amount){
 async function addTotalPlacesVisitedDom(obj){
     await addToDom("totalplacesvisited", obj.length);
 }
+async function getMostVisited(arr){
+    let unwantedSorted = []
+    let sortedArray = arr.sort((a,b)=>{a.amount > b.amount ? 1 : -1} )
+    unwantedSorted = sortedArray.filter((e)=>{return e != EUR_DEPOSIT && e != TRANSACTION_DESCRIPTION})
+    
+    if(unwantedSorted.length != 0){
+        return unwantedSorted[0];
+    }
+    return "";
+  
+}
+
 async function calculatePlaces(resu){
     let visitedPlacesMultiple = await getVisitedPlaces(resu);
     let visitedPlacesObj = await getHowManyTimesVisited(visitedPlacesMultiple);
-    let totalDepositTimes = await getAllTxWithCertainKey(visitedPlacesObj,EUR_DEPOSIT);
+    let totalDepositTimes = await getAllTxWithCertainKey(visitedPlacesObj,EUR_DEPOSIT); // TODO USD ?
+    let mostVisited = await getMostVisited(visitedPlacesMultiple);
     
     /*Add to DOM*/ 
     let totalPlacesVisited = await addTotalPlacesVisitedDom(resu);
     await addDepositsToDom(totalDepositTimes);
+    addToDom("mostvisited",mostVisited)
 
 
 }
 
+async function getAllTxWhichContainName(visitedPlacesObj, key){
+    let arr = [];
+    for(let obj of visitedPlacesObj){
+        if(obj[1].includes(key)){
+            arr.push(obj)
+        }
+    }
 
-async function main(resu){
-    await showElement2("loader");
-    await calculateCashback(resu);
-    await calculatePlaces(resu);
-    await hideElement2("loader");
+    return arr;
+
 }
 
-async function calculateCashback(resu){
+async function getTotalSpendFromObjects(objects){
+    
+    totalSpendRows = await new Promise((resolve,reject)=>{
+        let totalSpendRows = [];
+
+        for(let obj of objects){
+            amountWithMinusRemoved = obj[8].replace("-", "");
+            totalSpendRows.push(amountWithMinusRemoved);
+        }
+        resolve(totalSpendRows);
+    })
+
+    let sum = await addAllTogether(totalSpendRows);
+    return sum;
+    
+}
+async function getSpotify(minusObjects){
+    let allSpotifyTxObjects = await getAllTxWhichContainName(minusObjects,SPOTIFY);
+    let totalSpendRows = await getTotalSpendFromObjects(allSpotifyTxObjects);
+    addToDom("totalcashbackspotify",await limitAmount(totalSpendRows))
+    console.log("");
+}
+async function getNetflix(minusObjects){
+    let allNetflixTxObjects = await getAllTxWhichContainName(minusObjects,NETFLIX);
+    let totalSpendRows = await getTotalSpendFromObjects(allNetflixTxObjects);
+    addToDom("totalcashbacknetflix",await limitAmount(totalSpendRows))
+    console.log("");
+}
+
+async function limitAmount(amount){
+  return parseFloat(amount).toFixed(8);
+}
+
+async function calculatePercs(minusObjects){
+    await getSpotify(minusObjects);
+    await getNetflix(minusObjects);
+
+
+}
+async function calculateMinusRows(resu){
     let spendRows = await getSpendRows(resu);    
     console.log("Overall tx count: ", spendRows.length)
     let negativeRows = await parseNegativeValuesOnly(spendRows);
     console.log("Rows with cashback", negativeRows.length);
     let minusParsed = await parseMinusFromFront(negativeRows);
     console.log("minusparsed count", minusParsed.length);
-    //console.log(minusParsed);
-    let total = await addAllTogether(minusParsed);
+    return minusParsed;
+}
+
+async function getSpendObjects(dirtyRows){
+        /*From each row in excel, gets row number 9[8because starts with 0] and adds to a list*/
+   return new Promise((resolve,reject)=>{
+    let arr = [];
+    dirtyRows.forEach(val=>{
+        if(val !== null){
+            if(val[8].charAt(0) === '-'){
+                arr.push(val)
+            }
+        }
+    })
+    resolve(arr);
+
+ });
+
+
+}
+
+async function calculateMinusObjects(resu){
+    let spendObjects = await getSpendObjects(resu);
+    return spendObjects;
+    //let spotifyTx = getAllTxWhichContainName(spendObjects,SPOTIFY);    
+    console.log("Overall tx count: ", spendRows.length)
+
+}
+async function main(resu){
+    let minusObjects = await calculateMinusObjects(resu);
+    let minusRows = await calculateMinusRows(resu);
+    await showElement2("loader");
+    await calculateCashback(minusRows);
+    await calculatePlaces(resu);
+    await calculatePercs(minusObjects);
+    await hideElement2("loader");
+}
+
+async function calculateCashback(minusrows){
+
+    let total = await addAllTogether(minusrows);
    
     let cashback = await calculateCashBackPercentage(total);
 
     /*Biggest cashback*/ 
     
-    let biggestSpend = Math.max.apply(null,minusParsed);
+    let biggestSpend = Math.max.apply(null,minusrows);
     let biggestCashback = await calculateCashBackPercentage(biggestSpend);
     await addToDom("biggestcashback",biggestCashback);
 
     /*Smallest cashback*/
-    let smallestSpend = Math.min.apply(null,minusParsed);
+    let smallestSpend = Math.min.apply(null,minusrows);
     let smallestCashback = await calculateCashBackPercentage(smallestSpend);
     await addToDom("smallestcashback",smallestCashback);
     
 
     /*Add to DOM*/
-    writeToDom(cashback);
+    addToDom("totalcashbackvalue", await limitAmount(cashback))
 
-    console.log(cashback)
-    console.log(total)
-}
-function writeToDom(cashback){
-    let elem = document.getElementById("totalcashbackvalue");
-    if(elem){
-        elem.innerHTML = cashback;
-    }
+
 }
 
 function createInputListener(){
