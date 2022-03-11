@@ -145,7 +145,12 @@ async function getAllTxWithCertainKey(visitedPlacesObj, key){
 }
 async function addDepositsToDom(totalDepositTimesObj){
     let totaldepositElem = document.getElementById("totaldeposittimes");
-    totaldepositElem.innerHTML = totalDepositTimesObj[0].amount;
+    if(totalDepositTimesObj[0]){
+        totaldepositElem.innerHTML = totalDepositTimesObj[0].amount;
+
+    }else{
+
+    }
 }
 async function addToDom(element,amount){
     let elem = document.getElementById(element);
