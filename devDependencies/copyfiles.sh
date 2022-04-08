@@ -29,6 +29,10 @@ cp index.html build/
 echo copy /js/
 cp -R js build/
 
+echo copy SEO stuff
+cp robots.txt build
+cp sitemap.txt build
+
 echo [changing rights] index.js
 chmod 0777 build/js/index.js
 

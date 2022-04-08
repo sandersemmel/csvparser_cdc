@@ -122,3 +122,15 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+
+ .instructions{
+    display:flex;
+    flex-direction: row;
+ }
+
+ .instructionelement{
+     display: flex;
+     flex-direction: column;
+     padding: 1%;
+ }
